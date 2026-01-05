@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Packing | Graha Indonesia Organik</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Font: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex overflow-x-hidden min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30 text-gray-800">
+
+    <!-- Sidebar Overlay (mobile only) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#064e3b] to-[#065f46] text-white z-50 flex flex-col shadow-2xl lg:translate-x-0">
+        <div class="p-5 flex items-center gap-3 border-b border-green-900/40 logo-container">
+            <img src="logo.png" alt="Logo" class="h-10 w-10 object-contain rounded-lg shadow-md">
+            <h2 class="font-extrabold text-lg leading-tight logo-text">Graha Indonesia Organik</h2>
+        </div>
+
+        <nav class="flex-1 mt-6 px-4 space-y-2">
+            <a href="index.html" class="sidebar-active flex items-center gap-4 px-4 py-3 rounded-xl card-hover nav-item">
+                <i class="fas fa-th-large text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Dashboard</span>
+            </a>
+            <a href="absensi.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-calendar-check text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Absensi</span>
+            </a>
+            <a href="manajemen-produk.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-box-open text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Manajemen Produk</span>
+            </a>
+            <a href="riwayat.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-history text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Riwayat</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-green-900/40">
+            <a href="#" onclick="alert('Logout tidak diimplementasikan di versi static');" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white transition-all duration-300 font-bold shadow-lg nav-item">
+                <i class="fas fa-sign-out-alt min-w-[1.5rem]"></i>
+                <span class="sidebar-text logout-text">Keluar (Logout)</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 lg:ml-64 transition-all duration-400">
+        <!-- Header -->
+        <header class="glass-nav sticky top-0 px-6 lg:px-10 py-5 flex items-center justify-between z-40 shadow-md">
+            <div class="flex items-center gap-5">
+                <!-- Tombol Hamburger - SELALU MUNCUL (mobile & desktop) -->
+                <button onclick="toggleSidebar()" class="p-3 rounded-xl hover:bg-white/50 transition-all text-[#064e3b]">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <h1 class="text-2xl font-extrabold text-[#064e3b]">Dashboard Admin Packing</h1>
+            </div>
+
+            <div class="hidden md:block text-gray-600 font-semibold" id="current-date"></div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-sm text-gray-600">Selamat datang,</p>
+                    <p class="font-bold text-[#064e3b]">Ahmad Fauzi <span class="text-green-600">(Tim Packing)</span></p>
+                </div>
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-user text-xl"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="p-6 lg:p-10 space-y-10">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="stat-card bg-white p-6 rounded-3xl shadow-lg border border-gray-200 card-hover">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Total Jenis Barang</p>
+                    <h3 class="text-4xl font-black text-[#064e3b] mt-3" id="total-jenis">24</h3>
+                    <p class="text-xs text-green-600 mt-2">Terdaftar di sistem</p>
+                </div>
+                <div class="stat-card bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-3xl border border-amber-200 shadow-lg card-hover">
+                    <p class="text-xs text-amber-700 font-bold uppercase tracking-wider">Stok Rendah (< 100)</p>
+                    <h3 class="text-4xl font-black text-amber-800 mt-3" id="stok-rendah">6</h3>
+                    <p class="text-xs text-amber-600 mt-2">Perlu perhatian</p>
+                </div>
+                <div class="stat-card bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-3xl border border-green-200 shadow-lg card-hover">
+                    <p class="text-xs text-green-700 font-bold uppercase tracking-wider">Total Stok Keseluruhan</p>
+                    <h3 class="text-4xl font-black text-[#064e3b] mt-3" id="total-stok">2.054</h3>
+                    <p class="text-xs text-green-600 mt-2">Unit tersisa</p>
+                </div>
+                <div class="stat-card bg-white p-6 rounded-3xl shadow-lg border border-gray-200 card-hover">
+                    <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Update Terakhir</p>
+                    <h3 class="text-4xl font-black text-[#064e3b] mt-3" id="update-terakhir">Hari Ini</h3>
+                    <p class="text-xs text-gray-600 mt-2" id="tanggal-update"></p>
+                </div>
+            </div>
+
+            <!-- Grafik Stok -->
+            <div class="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 card-hover">
+                <h2 class="text-2xl font-extrabold text-[#064e3b] mb-8 text-center">Stok Produk yang Tersisa Saat Ini</h2>
+                <div class="max-w-5xl mx-auto">
+                    <canvas id="stockChart" height="350"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gradient-to-r from-[#064e3b] to-[#065f46] py-8 text-center text-white mt-20">
+            <p class="text-sm opacity-80">© 2026 Graha Indonesia Organik — Admin Packing Panel. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- Script Chart.js (sama seperti asli) -->
+    <script>
+        // Data dummy stok (bisa nanti di-load dari localStorage)
+        const stockData = {
+            labels: [
+                'Pupuk Cair Organik 5L',
+                'Kompos Organik',
+                'Bibit Padi Unggul',
+                'Pupuk Cair 1L',
+                'Bibit Jagung Hibrida',
+                'Pupuk Granul 50kg',
+                'Insektisida Organik',
+                'Pupuk Organik Granul',
+                'Herbisida Organik',
+                'Media Tanam Organik'
+            ],
+            data: [62, 102, 107, 121, 164, 175, 190, 377, 427, 429]
+        };
+
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: stockData.labels,
+                datasets: [{
+                    label: 'Stok Tersisa (Unit)',
+                    data: stockData.data,
+                    backgroundColor: [
+                        '#ef4444', '#f87171', '#fbbf24', '#fcd34d', '#a3e635',
+                        '#84cc16', '#22c55e', '#16a34a', '#15803d', '#064e3b'
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    maxBarThickness: 60
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 50 }, grid: { display: false } },
+                    x: { grid: { display: false }, ticks: { maxRotation: 45 } }
+                }
+            }
+        });
+
+        // Tanggal real-time
+        function updateDate() {
+            const now = new Date();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+            document.getElementById('tanggal-update').textContent = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+        updateDate();
+    </script>
+
+    <!-- function.js untuk sidebar -->
+    <script src="function.js"></script>
+</body>
+</html>

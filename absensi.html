@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Admin Packing | Graha Indonesia Organik</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Font: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex overflow-x-hidden min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30 text-gray-800">
+
+    <!-- Sidebar Overlay (mobile only) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#064e3b] to-[#065f46] text-white z-50 flex flex-col shadow-2xl lg:translate-x-0">
+        <div class="p-5 flex items-center gap-3 border-b border-green-900/40 logo-container">
+            <img src="logo.png" alt="Logo" class="h-10 w-10 object-contain rounded-lg shadow-md">
+            <h2 class="font-extrabold text-lg leading-tight logo-text">Graha Indonesia Organik</h2>
+        </div>
+
+        <nav class="flex-1 mt-6 px-4 space-y-2">
+            <a href="index.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-th-large text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Dashboard</span>
+            </a>
+            <a href="absensi.html" class="sidebar-active flex items-center gap-4 px-4 py-3 rounded-xl card-hover nav-item">
+                <i class="fas fa-calendar-check text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Absensi</span>
+            </a>
+            <a href="manajemen-produk.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-box-open text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Manajemen Produk</span>
+            </a>
+            <a href="riwayat.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-history text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Riwayat</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-green-900/40">
+            <a href="#" onclick="alert('Logout tidak tersedia di versi demo');" class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white transition-all duration-300 font-bold shadow-lg nav-item">
+                <i class="fas fa-sign-out-alt min-w-[1.5rem]"></i>
+                <span class="sidebar-text logout-text">Keluar (Logout)</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 lg:ml-64 transition-all duration-400">
+        <!-- Header - Dengan Tombol Hamburger SELALU MUNCUL -->
+        <header class="glass-nav sticky top-0 px-6 lg:px-10 py-5 flex items-center justify-between z-40 shadow-md">
+            <div class="flex items-center gap-5">
+                <!-- Tombol Hamburger - SELALU TERLIHAT & BISA DIKLIK -->
+                <button onclick="toggleSidebar()" class="p-3 rounded-xl hover:bg-white/50 transition-all text-[#064e3b]">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <h1 class="text-2xl font-extrabold text-[#064e3b]">Absensi Admin Packing</h1>
+            </div>
+
+            <div class="hidden md:block text-gray-600 font-semibold" id="header-date"></div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-sm text-gray-600">Selamat datang,</p>
+                    <p class="font-bold text-[#064e3b]">Ahmad Fauzi <span class="text-green-600">(Tim Packing)</span></p>
+                </div>
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-user text-xl"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Absensi -->
+        <div class="p-6 lg:p-10 max-w-screen-md mx-auto space-y-8">
+            <!-- Tanggal & Jam -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 text-center border border-gray-100">
+                <p class="text-sm text-gray-600 uppercase tracking-wider">Hari Ini</p>
+                <h2 class="text-2xl font-bold text-[#064e3b] mt-1" id="today-full"></h2>
+                <p class="text-4xl font-bold text-green-600 mt-4" id="current-time">--:--:--</p>
+            </div>
+
+            <!-- Status Absen -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 text-center">
+                    <i class="fas fa-sign-in-alt text-5xl text-green-600 mb-3"></i>
+                    <p class="text-lg font-bold text-gray-800">Absen Masuk</p>
+                    <p class="text-2xl font-extrabold text-[#064e3b] mt-3" id="waktu-masuk">-</p>
+                    <p class="text-sm mt-2" id="status-masuk">Belum absen masuk</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 text-center">
+                    <i class="fas fa-sign-out-alt text-5xl text-amber-600 mb-3"></i>
+                    <p class="text-lg font-bold text-gray-800">Absen Pulang</p>
+                    <p class="text-2xl font-extrabold text-[#064e3b] mt-3" id="waktu-pulang">-</p>
+                    <p class="text-sm mt-2" id="status-pulang">Belum absen pulang</p>
+                </div>
+            </div>
+
+            <!-- Tombol Absen & Selfie -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 text-center">
+                    <h3 class="text-xl font-bold text-[#064e3b] mb-4">Absen Masuk</h3>
+                    <div class="mb-4">
+                        <img id="photo-preview" class="hidden mx-auto rounded-xl shadow-md max-h-64" alt="Selfie">
+                        <div id="photo-placeholder" class="bg-gray-100 border-2 border-dashed rounded-xl w-64 h-64 mx-auto flex items-center justify-center">
+                            <i class="fas fa-camera text-6xl text-gray-400"></i>
+                        </div>
+                    </div>
+                    <button id="btn-masuk" onclick="openCamera('masuk')" class="w-full py-4 bg-gradient-to-br from-green-500 to-green-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-green-700 transition shadow-lg text-xl">
+                        <i class="fas fa-camera mr-2"></i> Ambil Selfie & Absen Masuk
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 text-center">
+                    <h3 class="text-xl font-bold text-[#064e3b] mb-4">Absen Pulang</h3>
+                    <button id="btn-pulang" onclick="absenPulang()" disabled class="w-full py-4 bg-gradient-to-br from-amber-500 to-amber-600 text-white font-bold rounded-xl opacity-50 cursor-not-allowed text-xl">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Absen Pulang Sekarang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lokasi -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-map-marker-alt text-3xl text-green-600"></i>
+                    <h3 class="text-xl font-bold text-[#064e3b]">Lokasi Saat Ini</h3>
+                </div>
+                <p class="text-base font-semibold" id="location-info">Mengambil lokasi...</p>
+                <p class="text-sm text-gray-600 mt-2" id="location-detail"></p>
+            </div>
+
+            <!-- Tombol Pengajuan Izin -->
+            <div class="text-center">
+                <button onclick="document.getElementById('modal-izin').classList.remove('hidden')" class="px-8 py-4 bg-gradient-to-br from-purple-500 to-purple-600 text-white font-bold rounded-xl hover:from-purple-600 hover:to-purple-700 transition shadow-lg text-lg">
+                    <i class="fas fa-envelope mr-2"></i> Ajukan Izin / Sakit
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Pengajuan Izin -->
+        <div id="modal-izin" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 text-white text-center">
+                    <i class="fas fa-envelope-open-text text-5xl mb-3"></i>
+                    <h3 class="text-2xl font-extrabold">Pengajuan Izin</h3>
+                </div>
+                <form id="form-izin" class="p-7 space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Jenis Pengajuan</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                            <option value="sakit">Sakit</option>
+                            <option value="izin">Izin Pribadi</option>
+                            <option value="cuti">Cuti Tahunan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Izin</label>
+                        <input type="date" id="tanggal-izin" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Alasan</label>
+                        <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Jelaskan alasan Anda..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Upload Bukti (Opsional)</label>
+                        <input type="file" accept="image/*,application/pdf" class="w-full px-4 py-3 border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button type="button" onclick="document.getElementById('modal-izin').classList.add('hidden')"
+                                class="flex-1 py-3 border border-gray-300 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition">
+                            Batal
+                        </button>
+                        <button type="submit"
+                                class="flex-1 py-3 bg-gradient-to-br from-purple-500 to-purple-600 text-white font-bold rounded-xl hover:from-purple-600 hover:to-purple-700 transition shadow-lg">
+                            Kirim Pengajuan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gradient-to-r from-[#064e3b] to-[#065f46] py-6 text-center text-white mt-16">
+            <p class="text-sm opacity-80">© 2026 Graha Indonesia Organik — Sistem Absensi Tim Packing</p>
+        </footer>
+    </main>
+
+    <!-- Hidden Camera Input -->
+    <input type="file" id="camera-input" accept="image/*" capture="user" class="hidden">
+
+    <!-- JavaScript Utama -->
+    <script src="function.js"></script>
+    <script>
+        // Load data absensi dari localStorage
+        const absenData = JSON.parse(localStorage.getItem('absenData')) || {
+            masuk: null,
+            pulang: null,
+            tanggal: null
+        };
+
+        // Jam real-time
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = 
+                now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Tanggal
+        const today = new Date();
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('today-full').textContent = today.toLocaleDateString('id-ID', options);
+        document.getElementById('header-date').textContent = today.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+        document.getElementById('tanggal-izin').value = today.toISOString().split('T')[0];
+
+        // Restore status absen jika hari ini sudah absen
+        if (absenData.tanggal === today.toISOString().split('T')[0]) {
+            if (absenData.masuk) {
+                document.getElementById('waktu-masuk').textContent = absenData.masuk;
+                document.getElementById('status-masuk').textContent = "Sudah absen masuk";
+                document.getElementById('status-masuk').classList.add('text-green-600', 'font-bold');
+                document.getElementById('btn-masuk').disabled = true;
+                document.getElementById('btn-masuk').innerHTML = `<i class="fas fa-check-circle text-5xl"></i><span class="text-xl block mt-3">Sudah Absen Masuk</span>`;
+                document.getElementById('btn-pulang').disabled = false;
+                document.getElementById('btn-pulang').classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('btn-pulang').classList.add('hover:from-amber-600', 'hover:to-amber-700');
+            }
+            if (absenData.pulang) {
+                document.getElementById('waktu-pulang').textContent = absenData.pulang;
+                document.getElementById('status-pulang').textContent = "Sudah absen pulang";
+                document.getElementById('status-pulang').classList.add('text-green-600', 'font-bold');
+                document.getElementById('btn-pulang').disabled = true;
+                document.getElementById('btn-pulang').innerHTML = `<i class="fas fa-check-circle text-5xl"></i><span class="text-xl block mt-3">Sudah Absen Pulang</span>`;
+            }
+        }
+
+        // Geolocation
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('location-info').textContent = "Geolocation tidak didukung.";
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude.toFixed(6);
+            const lon = position.coords.longitude.toFixed(6);
+            document.getElementById('location-info').innerHTML = '<span class="text-green-600 font-bold">Lokasi Terdeteksi</span>';
+            document.getElementById('location-detail').textContent = `Koordinat: ${lat}, ${lon} — Kantor Graha Indonesia Organik`;
+        }
+
+        function showError(error) {
+            document.getElementById('location-info').textContent = "Gagal mengambil lokasi.";
+            document.getElementById('location-info').classList.add('text-red-600');
+        }
+
+        // Buka kamera
+        let currentType = '';
+        function openCamera(type) {
+            currentType = type;
+            document.getElementById('camera-input').click();
+        }
+
+        document.getElementById('camera-input').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const preview = document.getElementById('photo-preview');
+                    preview.src = ev.target.result;
+                    preview.classList.remove('hidden');
+                    document.getElementById('photo-placeholder').classList.add('hidden');
+
+                    // Otomatis absen masuk setelah selfie
+                    if (currentType === 'masuk' && confirm('Selfie berhasil! Absen masuk sekarang?')) {
+                        absenMasuk();
+                    }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Absen Masuk
+        function absenMasuk() {
+            const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('waktu-masuk').textContent = now;
+            document.getElementById('status-masuk').textContent = "Sudah absen masuk";
+            document.getElementById('status-masuk').classList.add('text-green-600', 'font-bold');
+            document.getElementById('btn-masuk').disabled = true;
+            document.getElementById('btn-masuk').innerHTML = `<i class="fas fa-check-circle text-5xl"></i><span class="text-xl block mt-3">Sudah Absen Masuk</span>`;
+            document.getElementById('btn-pulang').disabled = false;
+            document.getElementById('btn-pulang').classList.remove('opacity-50', 'cursor-not-allowed');
+            document.getElementById('btn-pulang').classList.add('hover:from-amber-600', 'hover:to-amber-700');
+
+            // Simpan ke localStorage
+            absenData.masuk = now;
+            absenData.tanggal = today.toISOString().split('T')[0];
+            localStorage.setItem('absenData', JSON.stringify(absenData));
+
+            alert('Absen masuk berhasil pada pukul ' + now + '!');
+        }
+
+        // Absen Pulang
+        function absenPulang() {
+            if (confirm('Absen pulang sekarang?')) {
+                const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('waktu-pulang').textContent = now;
+                document.getElementById('status-pulang').textContent = "Sudah absen pulang";
+                document.getElementById('status-pulang').classList.add('text-green-600', 'font-bold');
+                document.getElementById('btn-pulang').disabled = true;
+                document.getElementById('btn-pulang').innerHTML = `<i class="fas fa-check-circle text-5xl"></i><span class="text-xl block mt-3">Sudah Absen Pulang</span>`;
+
+                // Simpan ke localStorage
+                absenData.pulang = now;
+                localStorage.setItem('absenData', JSON.stringify(absenData));
+
+                alert('Absen pulang berhasil. Selamat istirahat!');
+            }
+        }
+
+        // Submit pengajuan izin (simpan ke localStorage)
+        document.getElementById('form-izin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Pengajuan izin telah disimpan! (Demo: data tersimpan di browser Anda)');
+            document.getElementById('modal-izin').classList.add('hidden');
+            
+            // Bisa ditambah simpan ke array pengajuan di localStorage kalau mau
+            this.reset();
+            document.getElementById('tanggal-izin').value = today.toISOString().split('T')[0];
+        });
+
+        // Jalankan saat halaman dimuat
+        window.onload = function() {
+            getLocation();
+        };
+    </script>
+</body>
+</html>

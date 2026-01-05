@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Produk | Graha Indonesia Organik</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Font: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex overflow-x-hidden min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30 text-gray-800">
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#064e3b] to-[#065f46] text-white z-50 flex flex-col shadow-2xl transition-all duration-400 lg:translate-x-0">
+        <div class="p-5 flex items-center gap-3 border-b border-green-900/40 logo-container">
+            <img src="logo.png" alt="Logo" class="h-10 w-10 object-contain rounded-lg shadow-md">
+            <h2 class="font-extrabold text-lg leading-tight logo-text">Graha Indonesia Organik</h2>
+        </div>
+
+        <nav class="flex-1 mt-6 px-4 space-y-2">
+            <a href="index.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-th-large text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Dashboard</span>
+            </a>
+            <a href="absensi.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-calendar-check text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Absensi</span>
+            </a>
+            <a href="manajemen-produk.html" class="sidebar-active flex items-center gap-4 px-4 py-3 rounded-xl card-hover nav-item">
+                <i class="fas fa-box-open text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Manajemen Produk</span>
+            </a>
+            <a href="riwayat.html" class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white transition-all card-hover nav-item">
+                <i class="fas fa-history text-lg min-w-[1.5rem]"></i>
+                <span class="font-medium sidebar-text">Riwayat</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-green-900/40">
+            <a href="#" onclick="alert('Logout tidak tersedia di versi demo'); return false;"
+               class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white transition-all duration-300 font-bold shadow-lg nav-item">
+                <i class="fas fa-sign-out-alt min-w-[1.5rem]"></i>
+                <span class="sidebar-text logout-text">Keluar (Logout)</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 lg:ml-64 transition-all duration-400">
+        <!-- Header dengan Toggle Sidebar -->
+        <header class="glass-nav sticky top-0 px-6 lg:px-10 py-5 flex items-center justify-between z-40 shadow-md">
+            <div class="flex items-center gap-5">
+                <button onclick="toggleSidebar()" class="p-3 rounded-xl hover:bg-white/50 transition-all text-[#064e3b]">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <h1 class="text-2xl font-extrabold text-[#064e3b]">Manajemen Produk</h1>
+            </div>
+
+            <div class="hidden md:block text-gray-600 font-semibold" id="header-date"></div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-sm text-gray-600">Selamat datang,</p>
+                    <p class="font-bold text-[#064e3b]">Ahmad Fauzi <span class="text-green-600">(Tim Packing)</span></p>
+                </div>
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-user text-xl"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Utama -->
+        <div class="p-6 lg:p-10 space-y-8">
+            <!-- Notifikasi -->
+            <div id="notification" class="hidden fixed top-20 right-6 z-50 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
+                <i class="fas fa-check-circle text-2xl"></i>
+                <span id="notification-text"></span>
+            </div>
+
+            <!-- Tombol Tambah Produk -->
+            <div class="text-right">
+                <button onclick="openModal('modal-tambah')" class="px-8 py-4 bg-gradient-to-br from-green-500 to-green-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-green-700 transition shadow-lg text-lg">
+                    <i class="fas fa-plus mr-2"></i> Tambah Produk Baru
+                </button>
+            </div>
+
+            <!-- Pencarian & Filter -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="search-input" placeholder="Cari nama atau kode produk..." class="px-5 py-3 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none">
+                <select id="filter-kategori" class="px-5 py-3 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none">
+                    <option value="">Semua Kategori</option>
+                    <option value="Minyak">Minyak</option>
+                    <option value="Madu">Madu</option>
+                    <option value="Beras">Beras</option>
+                    <option value="Teh">Teh</option>
+                    <option value="Gula">Gula</option>
+                    <option value="Sabun">Sabun</option>
+                </select>
+                <div class="text-right text-gray-600 font-medium">
+                    Menampilkan: <span id="total-display">0</span> produk
+                </div>
+            </div>
+
+            <!-- Tabel Produk -->
+            <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left" id="produk-table">
+                        <thead class="bg-gray-50 text-xs text-gray-500 font-bold uppercase tracking-wider">
+                            <tr>
+                                <th class="px-8 py-5">Kode</th>
+                                <th class="px-8 py-5">Nama Produk</th>
+                                <th class="px-8 py-5">Kategori</th>
+                                <th class="px-8 py-5 text-center">Harga</th>
+                                <th class="px-8 py-5 text-center">Stok</th>
+                                <th class="px-8 py-5 text-center">Status</th>
+                                <th class="px-8 py-5 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100" id="produk-body">
+                            <!-- Data diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Tambah Produk (Versi Baru - Lebih Modern) -->
+        <div id="modal-tambah" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+                <div class="bg-gradient-to-r from-[#064e3b] to-[#065f46] p-6 text-white">
+                    <h3 class="text-xl font-extrabold flex items-center gap-3">
+                        <i class="fas fa-plus-circle text-2xl"></i>
+                        Tambah Produk Baru
+                    </h3>
+                </div>
+                <form id="form-tambah" class="p-7 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kode Produk</label>
+                            <input type="text" name="kode" placeholder="ex: GIO009" required
+                                class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk</label>
+                            <input type="text" name="nama" placeholder="Nama lengkap produk" required
+                                class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
+                            <select name="kategori" required
+                                class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none bg-white">
+                                <option value="" disabled selected>Pilih Kategori</option>
+                                <option value="Minyak">Minyak</option>
+                                <option value="Madu">Madu</option>
+                                <option value="Beras">Beras</option>
+                                <option value="Teh">Teh</option>
+                                <option value="Gula">Gula</option>
+                                <option value="Sabun">Sabun</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Harga (Rp)</label>
+                            <input type="number" name="harga" placeholder="0" min="0" required
+                                class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Stok Awal</label>
+                            <input type="number" name="stok" placeholder="0" min="0" value="0" required
+                                class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                            <select name="status" required
+                                class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none bg-white">
+                                <option value="Aktif">Aktif</option>
+                                <option value="Nonaktif">Nonaktif</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button type="button" onclick="closeModal('modal-tambah')"
+                            class="flex-1 py-3.5 bg-gray-200 text-gray-800 font-bold rounded-xl hover:bg-gray-300 transition">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="flex-1 py-3.5 bg-gradient-to-r from-[#064e3b] to-[#065f46] text-white font-bold rounded-xl hover:opacity-90 transition shadow-md">
+                            <i class="fas fa-save mr-2"></i>
+                            Simpan Produk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Edit & Detail (sama seperti asli, tapi pakai JS) -->
+        <!-- ... (sama seperti kode asli, tapi kita tambahkan di script) -->
+         <!-- Modal Edit Produk -->
+        <div id="modal-edit" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+                <div class="bg-gradient-to-r from-[#064e3b] to-[#065f46] p-6 text-white">
+                    <h3 class="text-xl font-extrabold flex items-center gap-3">
+                        <i class="fas fa-box"></i> Edit Produk
+                    </h3>
+                </div>
+                <div class="p-7">
+                    <form method="POST">
+                        <input type="hidden" name="id" id="edit-id">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Kode Produk</label>
+                                <input type="text" name="kode" id="edit-kode" required class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk</label>
+                                <input type="text" name="nama" id="edit-nama" required class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
+                                <select name="kategori" id="edit-kategori" required class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none bg-white">
+                                    <option value="Minyak">Minyak</option>
+                                    <option value="Madu">Madu</option>
+                                    <option value="Beras">Beras</option>
+                                    <option value="Teh">Teh</option>
+                                    <option value="Gula">Gula</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Harga (Rp)</label>
+                                <input type="number" name="harga" id="edit-harga" min="0" required class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Stok</label>
+                                <input type="number" name="stok" id="edit-stok" min="0" required class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                                <select name="status" id="edit-status" required class="w-full px-5 py-3.5 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 transition-all outline-none bg-white">
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 mt-8">
+                            <button type="submit" name="update" class="flex-1 py-3.5 bg-gradient-to-r from-[#064e3b] to-[#065f46] text-white font-bold rounded-xl hover:opacity-90 transition shadow-md">
+                                Update Produk
+                            </button>
+                            <button type="button" onclick="closeModal('modal-edit')" class="flex-1 py-3.5 bg-gray-200 text-gray-800 font-bold rounded-xl hover:bg-gray-300 transition">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Detail Produk -->
+        <div id="modal-detail" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+                <div class="bg-gradient-to-r from-[#064e3b] to-[#065f46] p-6 text-white text-center">
+                    <div class="w-16 h-16 bg-white/20 rounded-full mx-auto flex items-center justify-center mb-3">
+                        <i class="fas fa-box text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-extrabold" id="detail-nama-header"></h3>
+                    <p class="text-sm opacity-90 mt-1" id="detail-kode"></p>
+                </div>
+                <div class="p-7 space-y-5">
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Kategori</label>
+                        <p class="text-base text-gray-900" id="detail-kategori"></p>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Harga</label>
+                        <p class="text-base font-medium text-gray-900" id="detail-harga"></p>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Stok Tersedia</label>
+                        <p class="text-base font-medium" id="detail-stok"></p>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Status</label>
+                        <p class="text-base font-semibold" id="detail-status"></p>
+                    </div>
+
+                    <div class="text-center pt-4">
+                        <button type="button" onclick="closeModal('modal-detail')" class="px-10 py-3 bg-gradient-to-r from-[#064e3b] to-[#065f46] text-white font-bold rounded-xl hover:opacity-90 transition shadow-md">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gradient-to-r from-[#064e3b] to-[#065f46] py-8 text-center text-white mt-20">
+            <p class="text-sm opacity-80">© 2026 Graha Indonesia Organik — Admin Packing Panel</p>
+        </footer>
+    </main>
+
+    <!-- function.js untuk sidebar -->
+    <script src="function.js"></script>
+
+    <!-- JavaScript Manajemen Produk -->
+   <script>
+        // Data produk dari localStorage
+        let products = JSON.parse(localStorage.getItem('products')) || [
+            { id: 1, kode: 'GIO001', nama: 'Minyak Kelapa Organik 500ml', kategori: 'Minyak', harga: 85000, stok: 150, status: 'Aktif' },
+            { id: 2, kode: 'GIO002', nama: 'Madu Hutan Asli 1kg', kategori: 'Madu', harga: 175000, stok: 80, status: 'Aktif' },
+            { id: 3, kode: 'GIO003', nama: 'Beras Organik Merah 5kg', kategori: 'Beras', harga: 120000, stok: 200, status: 'Aktif' },
+            { id: 4, kode: 'GIO004', nama: 'Teh Herbal Daun Kelor 100g', kategori: 'Teh', harga: 45000, stok: 0, status: 'Nonaktif' },
+            { id: 5, kode: 'GIO005', nama: 'Gula Aren Organik 500g', kategori: 'Gula', harga: 60000, stok: 120, status: 'Aktif' },
+            { id: 6, kode: 'GIO006', nama: 'Sabun Organik Kopi 100g', kategori: 'Sabun', harga: 35000, stok: 95, status: 'Aktif' },
+            { id: 7, kode: 'GIO007', nama: 'Minyak Atsiri Kayu Putih', kategori: 'Minyak', harga: 75000, stok: 60, status: 'Aktif' },
+            { id: 8, kode: 'GIO008', nama: 'Madu Multifora 500g', kategori: 'Madu', harga: 95000, stok: 120, status: 'Aktif' }
+        ];
+
+        const tbody = document.getElementById('produk-body');
+        const searchInput = document.getElementById('search-input');
+        const filterKategori = document.getElementById('filter-kategori');
+        const totalDisplay = document.getElementById('total-display');
+
+        // Tanggal header
+        document.getElementById('header-date').textContent = new Date().toLocaleDateString('id-ID', { 
+            day: '2-digit', month: 'long', year: 'numeric' 
+        });
+
+        // Render tabel
+        function renderTable() {
+            const query = searchInput.value.toLowerCase();
+            const kategori = filterKategori.value;
+
+            const filtered = products.filter(p => {
+                const matchSearch = p.nama.toLowerCase().includes(query) || p.kode.toLowerCase().includes(query);
+                const matchKat = kategori === '' || p.kategori === kategori;
+                return matchSearch && matchKat;
+            });
+
+            totalDisplay.textContent = filtered.length;
+
+            tbody.innerHTML = '';
+            filtered.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-green-50/50 transition-all data-row';
+                tr.innerHTML = `
+                    <td class="px-8 py-5 font-medium text-gray-900">${p.kode}</td>
+                    <td class="px-8 py-5 font-medium">${p.nama}</td>
+                    <td class="px-8 py-5 text-gray-600">${p.kategori}</td>
+                    <td class="px-8 py-5 text-center font-bold">Rp ${p.harga.toLocaleString('id-ID')}</td>
+                    <td class="px-8 py-5 text-center font-bold ${p.stok === 0 ? 'text-red-600' : p.stok < 50 ? 'text-amber-600' : 'text-green-600'}">${p.stok}</td>
+                    <td class="px-8 py-5 text-center">
+                        <span class="px-4 py-1.5 rounded-full text-xs font-bold ${p.status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${p.status}
+                        </span>
+                    </td>
+                    <td class="px-8 py-5 text-center">
+                        <button onclick="viewDetail(${p.id})" class="text-blue-600 hover:text-blue-800 mr-4 text-lg"><i class="fas fa-eye"></i></button>
+                        <button onclick="editProduct(${p.id})" class="text-amber-600 hover:text-amber-800 mr-4 text-lg"><i class="fas fa-edit"></i></button>
+                        <button onclick="hapusProduct(${p.id})" class="text-red-600 hover:text-red-800 text-lg"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Notifikasi
+        function showNotification(msg) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notification-text').textContent = msg;
+            notif.classList.remove('hidden');
+            setTimeout(() => {
+                notif.classList.add('opacity-0');
+                setTimeout(() => {
+                    notif.classList.add('hidden');
+                    notif.classList.remove('opacity-0');
+                }, 500);
+            }, 4000);
+        }
+
+        // Tambah produk
+        document.getElementById('form-tambah').addEventListener('submit', e => {
+            e.preventDefault();
+            const form = e.target;
+            const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
+            const newProduct = {
+                id: newId,
+                kode: form.kode.value.trim(),
+                nama: form.nama.value.trim(),
+                kategori: form.kategori.value,
+                harga: parseInt(form.harga.value),
+                stok: parseInt(form.stok.value),
+                status: form.status.value
+            };
+            products.push(newProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+            renderTable();
+            closeModal('modal-tambah');
+            form.reset();
+            showNotification('Produk baru berhasil ditambahkan!');
+        });
+
+        // Hapus produk
+        function hapusProduct(id) {
+            if (confirm('Yakin ingin menghapus produk ini?')) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('products', JSON.stringify(products));
+                renderTable();
+                showNotification('Produk berhasil dihapus!');
+            }
+        }
+
+        // View Detail Produk
+        function viewDetail(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+
+            document.getElementById('detail-nama-header').textContent = p.nama;
+            document.getElementById('detail-kode').textContent = p.kode;
+            document.getElementById('detail-kategori').textContent = p.kategori;
+            document.getElementById('detail-harga').textContent = 'Rp ' + p.harga.toLocaleString('id-ID');
+            document.getElementById('detail-stok').textContent = p.stok + (p.stok === 0 ? ' (Habis)' : '');
+            document.getElementById('detail-status').textContent = p.status;
+            document.getElementById('detail-status').className = 'text-base font-semibold ' + (p.status === 'Aktif' ? 'text-green-600' : 'text-red-600');
+
+            openModal('modal-detail');
+        }
+
+        // Edit Produk
+        function editProduct(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+
+            // Isi form edit
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('edit-kode').value = p.kode;
+            document.getElementById('edit-nama').value = p.nama;
+            document.getElementById('edit-kategori').value = p.kategori;
+            document.getElementById('edit-harga').value = p.harga;
+            document.getElementById('edit-stok').value = p.stok;
+            document.getElementById('edit-status').value = p.status;
+
+            openModal('modal-edit');
+        }
+
+        // Simpan perubahan edit (event pada tombol di dalam modal-edit)
+        document.querySelector('#modal-edit form').addEventListener('submit', e => {
+            e.preventDefault();
+            const form = e.target;
+            const id = parseInt(form.querySelector('#edit-id').value);
+
+            const updatedProduct = {
+                id: id,
+                kode: form.querySelector('#edit-kode').value.trim(),
+                nama: form.querySelector('#edit-nama').value.trim(),
+                kategori: form.querySelector('#edit-kategori').value,
+                harga: parseInt(form.querySelector('#edit-harga').value),
+                stok: parseInt(form.querySelector('#edit-stok').value),
+                status: form.querySelector('#edit-status').value
+            };
+
+            products = products.map(p => p.id === id ? updatedProduct : p);
+            localStorage.setItem('products', JSON.stringify(products));
+            renderTable();
+            closeModal('modal-edit');
+            showNotification('Produk berhasil diperbarui!');
+        });
+
+        // Fungsi modal
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        // Event listener pencarian & filter
+        searchInput.addEventListener('input', renderTable);
+        filterKategori.addEventListener('change', renderTable);
+
+        // Inisialisasi
+        renderTable();
+    </script>
+</body>
+</html>

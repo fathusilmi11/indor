@@ -1,0 +1,93 @@
+body {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Efek hover kartu */
+.card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+/* Glass effect untuk header */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Animasi masuk kartu statistik */
+.stat-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.7s ease-out forwards;
+}
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Menu sidebar aktif */
+.sidebar-active {
+    background: linear-gradient(to right, #22c55e, #16a34a);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
+}
+.sidebar-active i {
+    color: white;
+}
+
+/* Sidebar collapsed style */
+#sidebar.collapsed {
+    width: 5rem;
+}
+#sidebar.collapsed .sidebar-text {
+    display: none;
+}
+#sidebar.collapsed .logo-text {
+    display: none;
+}
+#sidebar.collapsed .logo-container {
+    justify-content: center;
+}
+#sidebar.collapsed .nav-item {
+    justify-content: center;
+}
+#sidebar.collapsed .logout-text {
+    display: none;
+}
+
+/* Sidebar mobile behavior */
+@media (max-width: 1023px) {
+    #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.4s ease-in-out;
+        width: 16rem !important;
+    }
+    #sidebar.active {
+        transform: translateX(0);
+    }
+    #main-content {
+        margin-left: 0 !important;
+    }
+    /* Tambahan untuk mobile: padding lebih besar, font lebih besar */
+    .p-6 { padding: 1rem; }
+    h1 { font-size: 1.5rem; }
+    .text-xl { font-size: 1.125rem; }
+    .text-2xl { font-size: 1.25rem; }
+    .text-4xl { font-size: 1.875rem; }
+    table { font-size: 0.875rem; }
+    input, select, button { font-size: 1rem; padding: 0.75rem; }
+    .grid-cols-3 { grid-template-columns: repeat(1, minmax(0, 1fr)); } /* Stack tombol di mobile */
+}
+@media (min-width: 1024px) {
+    #sidebar {
+        transform: translateX(0) !important;
+        transition: width 0.3s ease;
+    }
+    #main-content {
+        transition: margin-left 0.3s ease;
+    }
+}
