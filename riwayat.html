@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Transaksi | Graha Indonesia Organik</title>
+    <title>Riwayat | Graha Indonesia Organik</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,26 +14,15 @@
     <!-- Google Font: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        body { font-family: 'Outfit', sans-serif; }
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        .data-row:hover {
-            background-color: rgba(220, 252, 231, 0.3);
-            transition: background-color 0.3s;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="flex overflow-x-hidden min-h-screen bg-gradient-to-br from-gray-50 to-green-50/30 text-gray-800">
 
     <!-- Sidebar Overlay (mobile) -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-    <!-- Sidebar (SAMA PERSIS DENGAN HALAMAN LAIN) -->
+    <!-- Sidebar -->
     <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-[#064e3b] to-[#065f46] text-white z-50 flex flex-col shadow-2xl transition-all duration-400 lg:translate-x-0">
         <div class="p-5 flex items-center gap-3 border-b border-green-900/40 logo-container">
             <img src="logo.png" alt="Logo" class="h-10 w-10 object-contain rounded-lg shadow-md">
@@ -53,7 +42,7 @@
                 <i class="fas fa-box-open text-lg min-w-[1.5rem]"></i>
                 <span class="font-medium sidebar-text">Manajemen Produk</span>
             </a>
-            <a href="riwayat.html" class="sidebar-active flex items-center gap-4 px-4 py-3 rounded-xl card-hover nav-item bg-white/10">
+            <a href="riwayat.html" class="sidebar-active flex items-center gap-4 px-4 py-3 rounded-xl card-hover nav-item">
                 <i class="fas fa-history text-lg min-w-[1.5rem]"></i>
                 <span class="font-medium sidebar-text">Riwayat</span>
             </a>
@@ -69,14 +58,14 @@
     </aside>
 
     <!-- Main Content -->
-    <main id="main-content" class="flex-1 lg:ml-64 transition-all duration-400 flex flex-col min-h-screen">
-        <!-- Header (SAMA PERSIS) -->
+    <main id="main-content" class="flex-1 lg:ml-64 transition-all duration-400">
+        <!-- Header dengan Toggle Sidebar -->
         <header class="glass-nav sticky top-0 px-6 lg:px-10 py-5 flex items-center justify-between z-40 shadow-md">
             <div class="flex items-center gap-5">
                 <button onclick="toggleSidebar()" class="p-3 rounded-xl hover:bg-white/50 transition-all text-[#064e3b]">
                     <i class="fas fa-bars text-2xl"></i>
                 </button>
-                <h1 class="text-2xl font-extrabold text-[#064e3b]">Riwayat Transaksi</h1>
+                <h1 class="text-2xl font-extrabold text-[#064e3b]">Riwayat Aktivitas</h1>
             </div>
 
             <div class="hidden md:block text-gray-600 font-semibold" id="header-date"></div>
@@ -93,59 +82,40 @@
         </header>
 
         <!-- Konten Utama -->
-        <div class="flex-1 p-6 lg:p-10 space-y-8">
+        <div class="p-6 lg:p-10 space-y-8">
             <!-- Notifikasi -->
-            <div id="notification" class="hidden fixed top-20 right-6 z-50 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transition-opacity duration-500">
+            <div id="notification" class="hidden fixed top-20 right-6 z-50 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
                 <i class="fas fa-check-circle text-2xl"></i>
-                <span id="notification-text" class="font-medium"></span>
+                <span id="notification-text"></span>
             </div>
 
-            <!-- Filter: Pencarian, Tanggal, dan Jumlah -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
-                <!-- Pencarian Transaksi -->
-                <div>
-                    <input type="text" id="search-riwayat" placeholder="Cari produk atau keterangan..." 
-                           class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none transition">
-                </div>
+            <!-- Filter & Pencarian -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="search-input" placeholder="Cari aktivitas atau produk..." class="px-5 py-3 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none">
+                
+                <select id="filter-tipe" class="px-5 py-3 rounded-xl border border-gray-300 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none">
+                    <option value="">Semua Tipe</option>
+                    <option value="tambah">Tambah Produk</option>
+                    <option value="edit">Edit Produk</option>
+                    <option value="hapus">Hapus Produk</option>
+                </select>
 
-                <!-- Filter Tanggal -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Dari Tanggal</label>
-                        <input type="date" id="filter-from" class="w-full px-4 py-4 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-600 mb-1">Sampai Tanggal</label>
-                        <input type="date" id="filter-to" class="w-full px-4 py-4 rounded-xl border border-gray-200 focus:border-[#064e3b] focus:ring-4 focus:ring-green-100 outline-none transition">
-                    </div>
+                <div class="text-right text-gray-600 font-medium">
+                    Menampilkan: <span id="total-display">0</span> riwayat
                 </div>
-
-                <!-- Tombol Reset Filter -->
-                <div class="flex justify-start md:justify-end">
-                    <button onclick="resetFilters()" class="inline-flex items-center px-6 py-4 bg-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-300 transition">
-                        <i class="fas fa-sync-alt mr-2"></i> Reset Filter
-                    </button>
-                </div>
-            </div>
-
-            <!-- Jumlah Riwayat -->
-            <div class="text-right text-gray-600 font-medium">
-                Menampilkan: <span id="total-riwayat" class="font-bold text-[#064e3b]">0</span> transaksi
             </div>
 
             <!-- Tabel Riwayat -->
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gradient-to-r from-gray-50 to-gray-100 text-xs font-bold uppercase tracking-wider text-gray-600">
+                    <table class="w-full text-left" id="riwayat-table">
+                        <thead class="bg-gray-50 text-xs text-gray-500 font-bold uppercase tracking-wider">
                             <tr>
-                                <th class="px-8 py-5">Tanggal & Jam</th>
-                                <th class="px-8 py-5">Kode Produk</th>
-                                <th class="px-8 py-5">Nama Produk</th>
-                                <th class="px-8 py-5 text-center">Jumlah</th>
-                                <th class="px-8 py-5">Jenis</th>
-                                <th class="px-8 py-5">Keterangan</th>
-                                <th class="px-8 py-5">Oleh</th>
+                                <th class="px-8 py-5">Waktu</th>
+                                <th class="px-8 py-5">Pengguna</th>
+                                <th class="px-8 py-5">Tipe Aktivitas</th>
+                                <th class="px-8 py-5">Detail</th>
+                                <th class="px-8 py-5">Produk</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100" id="riwayat-body">
@@ -157,7 +127,7 @@
         </div>
 
         <!-- Footer -->
-        <footer class="bg-gradient-to-r from-[#064e3b] to-[#065f46] py-6 text-center text-white">
+        <footer class="bg-gradient-to-r from-[#064e3b] to-[#065f46] py-8 text-center text-white mt-20">
             <p class="text-sm opacity-80">© 2026 Graha Indonesia Organik — Admin Packing Panel</p>
         </footer>
     </main>
@@ -167,98 +137,94 @@
 
     <!-- JavaScript Riwayat -->
     <script>
-        // Contoh data riwayat (bisa diintegrasikan nanti dengan manajemen produk)
+        // Riwayat aktivitas disimpan di localStorage
         let riwayat = JSON.parse(localStorage.getItem('riwayat')) || [
-            { id: 1, tanggal: '2026-01-04', waktu: '14:30', kode: 'GIO001', nama: 'Minyak Kelapa Organik 500ml', jumlah: 20, jenis: 'Keluar', keterangan: 'Packing pesanan #ORD-2026-001', oleh: 'Ahmad Fauzi' },
-            { id: 2, tanggal: '2026-01-04', waktu: '10:15', kode: 'GIO002', nama: 'Madu Hutan Asli 1kg', jumlah: 10, jenis: 'Keluar', keterangan: 'Packing pesanan #ORD-2026-002', oleh: 'Ahmad Fauzi' },
-            { id: 3, tanggal: '2026-01-03', waktu: '16:45', kode: 'GIO003', nama: 'Beras Organik Merah 5kg', jumlah: 50, jenis: 'Masuk', keterangan: 'Restok gudang packing', oleh: 'Supervisor Gudang' },
-            { id: 4, tanggal: '2026-01-03', waktu: '09:20', kode: 'GIO006', nama: 'Sabun Organik Kopi 100g', jumlah: 30, jenis: 'Keluar', keterangan: 'Packing promo bundling', oleh: 'Ahmad Fauzi' },
-            { id: 5, tanggal: '2026-01-02', waktu: '13:00', kode: 'GIO005', nama: 'Gula Aren Organik 500g', jumlah: 15, jenis: 'Keluar', keterangan: 'Pesanan marketplace', oleh: 'Ahmad Fauzi' },
-            { id: 6, tanggal: '2026-01-01', waktu: '11:10', kode: 'GIO004', nama: 'Teh Herbal Daun Kelor 100g', jumlah: 5, jenis: 'Keluar', keterangan: 'Sample untuk customer', oleh: 'Supervisor' }
+            { id: 1, waktu: new Date('2026-01-04T10:30:00'), pengguna: 'Ahmad Fauzi', tipe: 'tambah', detail: 'Menambahkan produk baru', produk: 'Minyak Kelapa Organik 500ml (GIO001)' },
+            { id: 2, waktu: new Date('2026-01-04T14:15:00'), pengguna: 'Ahmad Fauzi', tipe: 'edit', detail: 'Mengubah stok dan harga', produk: 'Madu Hutan Asli 1kg (GIO002)' },
+            { id: 3, waktu: new Date('2026-01-03T09:45:00'), pengguna: 'Ahmad Fauzi', tipe: 'hapus', detail: 'Menghapus produk lama', produk: 'Teh Hijau 50g (GIO009)' },
+            { id: 4, waktu: new Date('2026-01-03T16:20:00'), pengguna: 'Ahmad Fauzi', tipe: 'tambah', detail: 'Menambahkan produk baru', produk: 'Sabun Organik Kopi 100g (GIO006)' },
+            { id: 5, waktu: new Date('2026-01-02T11:10:00'), pengguna: 'Ahmad Fauzi', tipe: 'edit', detail: 'Mengubah status menjadi Nonaktif', produk: 'Teh Herbal Daun Kelor 100g (GIO004)' }
         ];
 
         const tbody = document.getElementById('riwayat-body');
-        const searchInput = document.getElementById('search-riwayat');
-        const filterFrom = document.getElementById('filter-from');
-        const filterTo = document.getElementById('filter-to');
-        const totalRiwayat = document.getElementById('total-riwayat');
+        const searchInput = document.getElementById('search-input');
+        const filterTipe = document.getElementById('filter-tipe');
+        const totalDisplay = document.getElementById('total-display');
 
-        // Set tanggal hari ini di header
+        // Tanggal header
         document.getElementById('header-date').textContent = new Date().toLocaleDateString('id-ID', { 
             day: '2-digit', month: 'long', year: 'numeric' 
         });
 
-        // Set default filter tanggal (opsional: 30 hari terakhir)
-        const today = new Date().toISOString().split('T')[0];
-        const thirtyDaysAgo = new Date(Date.now() - 30*24*60*60*1000).toISOString().split('T')[0];
-        filterFrom.value = thirtyDaysAgo;
-        filterTo.value = today;
+        // Format tanggal & waktu
+        function formatWaktu(date) {
+            return new Date(date).toLocaleString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
 
-        function renderRiwayat() {
+        // Render tabel riwayat
+        function renderTable() {
             const query = searchInput.value.toLowerCase();
-            const from = filterFrom.value;
-            const to = filterTo.value;
+            const tipe = filterTipe.value;
 
-            let filtered = riwayat.filter(r => {
-                const matchSearch = r.nama.toLowerCase().includes(query) || 
-                                   r.kode.toLowerCase().includes(query) || 
-                                   r.keterangan.toLowerCase().includes(query);
-                const matchDate = (!from || r.tanggal >= from) && (!to || r.tanggal <= to);
-                return matchSearch && matchDate;
+            const filtered = riwayat.filter(r => {
+                const matchSearch = r.detail.toLowerCase().includes(query) || 
+                                   r.produk.toLowerCase().includes(query) ||
+                                   r.pengguna.toLowerCase().includes(query);
+                const matchTipe = tipe === '' || r.tipe === tipe;
+                return matchSearch && matchTipe;
             });
 
-            // Urutkan dari terbaru ke terlama
-            filtered.sort((a, b) => {
-                const dateA = new Date(a.tanggal + ' ' + a.waktu);
-                const dateB = new Date(b.tanggal + ' ' + b.waktu);
-                return dateB - dateA;
-            });
+            // Urutkan dari yang terbaru
+            filtered.sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
 
-            totalRiwayat.textContent = filtered.length;
+            totalDisplay.textContent = filtered.length;
 
             tbody.innerHTML = '';
-            if (filtered.length === 0) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td colspan="7" class="px-8 py-12 text-center text-gray-500">Tidak ada riwayat transaksi ditemukan</td>`;
-                tbody.appendChild(tr);
-                return;
-            }
-
             filtered.forEach(r => {
                 const tr = document.createElement('tr');
-                tr.className = 'data-row';
-                const jenisClass = r.jenis === 'Masuk' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800';
+                tr.className = 'hover:bg-green-50/50 transition-all data-row';
+
+                let iconTipe = '';
+                let warnaTipe = '';
+                if (r.tipe === 'tambah') {
+                    iconTipe = '<i class="fas fa-plus-circle text-green-600"></i>';
+                    warnaTipe = 'bg-green-100 text-green-800';
+                } else if (r.tipe === 'edit') {
+                    iconTipe = '<i class="fas fa-edit text-amber-600"></i>';
+                    warnaTipe = 'bg-amber-100 text-amber-800';
+                } else if (r.tipe === 'hapus') {
+                    iconTipe = '<i class="fas fa-trash text-red-600"></i>';
+                    warnaTipe = 'bg-red-100 text-red-800';
+                }
+
                 tr.innerHTML = `
-                    <td class="px-8 py-6 font-medium text-gray-900">${r.tanggal}<br><span class="text-sm text-gray-500">${r.waktu}</span></td>
-                    <td class="px-8 py-6 font-medium text-gray-800">${r.kode}</td>
-                    <td class="px-8 py-6">${r.nama}</td>
-                    <td class="px-8 py-6 text-center font-bold">${r.jumlah}</td>
-                    <td class="px-8 py-6 text-center">
-                        <span class="px-4 py-2 rounded-full text-xs font-bold ${jenisClass}">
-                            ${r.jenis}
+                    <td class="px-8 py-5 text-gray-600">${formatWaktu(r.waktu)}</td>
+                    <td class="px-8 py-5 font-medium">${r.pengguna}</td>
+                    <td class="px-8 py-5">
+                        <span class="px-4 py-1.5 rounded-full text-xs font-bold ${warnaTipe} flex items-center gap-2 w-fit">
+                            ${iconTipe}
+                            ${r.tipe.charAt(0).toUpperCase() + r.tipe.slice(1)}
                         </span>
                     </td>
-                    <td class="px-8 py-6 text-gray-600">${r.keterangan}</td>
-                    <td class="px-8 py-6 text-gray-600">${r.oleh}</td>
+                    <td class="px-8 py-5 text-gray-700">${r.detail}</td>
+                    <td class="px-8 py-5 font-medium text-gray-900">${r.produk}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function resetFilters() {
-            searchInput.value = '';
-            filterFrom.value = thirtyDaysAgo;
-            filterTo.value = today;
-            renderRiwayat();
-        }
-
-        // Event listeners
-        searchInput.addEventListener('input', renderRiwayat);
-        filterFrom.addEventListener('change', renderRiwayat);
-        filterTo.addEventListener('change', renderRiwayat);
+        // Event listener pencarian & filter
+        searchInput.addEventListener('input', renderTable);
+        filterTipe.addEventListener('change', renderTable);
 
         // Inisialisasi
-        renderRiwayat();
+        renderTable();
     </script>
 </body>
 </html>
